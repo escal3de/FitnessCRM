@@ -3,6 +3,7 @@
 public static class Permissions
 {
     public const string MeRead = "me.read";
+    public const string MeUpdate = "me.update";
     
     public const string UsersRead = "users.read";
     public const string UsersUpdate = "users.update";

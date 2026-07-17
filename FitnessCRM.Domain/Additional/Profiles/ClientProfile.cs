@@ -9,35 +9,33 @@ public class ClientProfile
     public int? Height { get; private set; }
     public int? Weight { get; private set; }
     public string? MedicalContraindications { get; private set; }
-    public UserGender UserGender { get; private set; }
     public List<School> Schools { get; }
     public List<SeasonTicket> SeasonTickets { get; private set; }
     public string? ParentsCommunication { get; private set; }
     public DateTime CreatedAt { get; private set; }
 
-    private ClientProfile(Guid id, int? height, int? weight, string? medicalContraindications, UserGender userGender,
-        List<School> schools, List<SeasonTicket> seasonTickets, string? parentsCommunication, DateTime createdAt)
+    private ClientProfile(Guid id, int? height, int? weight, string? medicalContraindications, List<School> schools,
+        List<SeasonTicket> seasonTickets, string? parentsCommunication, DateTime createdAt)
     {
         Id = id;
         Height = height;
         Weight = weight;
         MedicalContraindications = medicalContraindications;
-        UserGender = userGender;
         Schools = schools;
         SeasonTickets = seasonTickets;
         ParentsCommunication = parentsCommunication;
         CreatedAt = createdAt;
     }
 
-    public static Result<ClientProfile> Create(int? height, int? weight, UserGender userGender)
+    public static Result<ClientProfile> Create(int? height, int? weight)
     {
         return Result.Success(new ClientProfile(Guid.NewGuid(), height, weight,
-            null, userGender, [], [], null, DateTime.UtcNow));
+            null, [], [], null, DateTime.UtcNow));
     }
 
     public static ClientProfile Load(Guid id, int? height, int? weight, string? medicalContraindications,
-        UserGender userGender, List<School> schools, List<SeasonTicket> seasonTickets, string? parentsCommunication,
+        List<School> schools, List<SeasonTicket> seasonTickets, string? parentsCommunication,
         DateTime createdAt)
-        => new ClientProfile(id, height, weight, medicalContraindications, userGender, schools, seasonTickets,
+        => new ClientProfile(id, height, weight, medicalContraindications, schools, seasonTickets,
             parentsCommunication, createdAt);
 }

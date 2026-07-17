@@ -33,6 +33,14 @@ public class ContactDataConfiguration : IEntityTypeConfiguration<ContactDataEnti
         builder.Property(x => x.Patronymic)
             .IsRequired();
 
+        builder.Property(x => x.Birthday);
+
+        builder.Property(x => x.UserGender)
+            .HasConversion<string>()
+            .IsRequired();
+
+        builder.Property(x => x.Profession);
+
         builder.Property(x => x.LastUpdatedAt)
             .IsRequired();
 

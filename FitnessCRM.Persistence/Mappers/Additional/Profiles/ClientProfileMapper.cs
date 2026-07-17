@@ -13,7 +13,6 @@ public static class ClientProfileMapper
             Height = profile.Height,
             Weight = profile.Weight,
             MedicalContraindications = profile.MedicalContraindications,
-            UserGender = profile.UserGender,
             SeasonTickets = profile.SeasonTickets.Select(x => x.Map()).ToList(),
             ParentsCommunication = profile.ParentsCommunication,
             CreatedAt = profile.CreatedAt
@@ -25,7 +24,6 @@ public static class ClientProfileMapper
             entity.Height,
             entity.Weight,
             entity.MedicalContraindications,
-            entity.UserGender,
             entity.ClientSchools?.Select(x => x.School?.Map()).Where(x => x != null).ToList() ?? [],
             entity.SeasonTickets?.Select(x => x.Map()).ToList() ?? [],
             entity.ParentsCommunication,

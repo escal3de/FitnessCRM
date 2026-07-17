@@ -1,4 +1,5 @@
-﻿using FitnessCRM.Domain.VO;
+﻿using FitnessCRM.Domain.Enums.Users;
+using FitnessCRM.Domain.VO;
 
 namespace FitnessCRM.Persistence.Entities.VO;
 
@@ -14,6 +15,7 @@ public class ContactDataEntity
     public string LastName { get; set; }
     public string Patronymic { get; set; } // отчество лол хвахвха
     public DateTime? Birthday { get; set; }
+    public UserGender UserGender { get; set; }
     public string? Profession { get; set; }
     public DateTime LastUpdatedAt { get; set; }
     public DateTime CreatedAt { get; set; }

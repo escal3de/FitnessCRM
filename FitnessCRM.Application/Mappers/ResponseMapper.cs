@@ -39,6 +39,7 @@ public static class ResponseMapper
             contactData.LastName,
             contactData.Patronymic,
             contactData.Birthday,
+            contactData.UserGender.ToString(),
             contactData.Profession,
             contactData.LastUpdatedAt,
             contactData.CreatedAt);
@@ -49,7 +50,6 @@ public static class ResponseMapper
             clientProfile.Height,
             clientProfile.Weight,
             clientProfile.MedicalContraindications,
-            clientProfile.UserGender.ToString(),
             clientProfile.Schools.Select(x => x.Name.ToString()).ToList(),
             clientProfile.SeasonTickets.Select(x => x.Map()).ToList(),
             clientProfile.ParentsCommunication,
@@ -61,7 +61,6 @@ public static class ResponseMapper
             clientProfile.Height,
             clientProfile.Weight,
             clientProfile.MedicalContraindications,
-            clientProfile.UserGender.ToString(),
             clientProfile.Schools.Select(x => x.Name.ToString()).ToList(),
             clientProfile.SeasonTickets.Select(x => x.Map()).ToList(),
             clientProfile.ParentsCommunication,

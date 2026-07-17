@@ -14,7 +14,8 @@ public static class MapPermissions
 
                 [UserRole.Default] =
                 [
-                    MeRead
+                    MeRead,
+                    MeUpdate
                 ],
 
                 [UserRole.Teacher] =

@@ -21,10 +21,6 @@ public class ClientProfileConfiguration : IEntityTypeConfiguration<ClientProfile
 
         builder.Property(x => x.MedicalContraindications);
         
-        builder.Property(x => x.UserGender)
-            .HasConversion<string>()
-            .IsRequired();
-        
         builder.HasMany(x => x.ClientSchools)
             .WithOne(x => x.ClientProfile)
             .HasForeignKey(x => x.ClientProfileId)

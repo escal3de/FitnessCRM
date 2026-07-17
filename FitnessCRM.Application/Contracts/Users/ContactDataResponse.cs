@@ -1,4 +1,6 @@
-﻿namespace FitnessCRM.Application.Contracts.Users;
+﻿using FitnessCRM.Domain.Enums.Users;
+
+namespace FitnessCRM.Application.Contracts.Users;
 
 public record ContactDataResponse(
     string? AvatarUrl,
@@ -7,6 +9,7 @@ public record ContactDataResponse(
     string LastName,
     string Patronymic,
     DateTime? Birthday,
+    string UserGender,
     string? Profession,
     DateTime LastUpdateAt,
     DateTime CreatedAt);

@@ -8,7 +8,6 @@ public record ClientProfileResponse(
     int? Height,
     int? Width,
     string? MedicalContraindications,
-    string Gender,
     List<string> Schools,
     List<SeasonTicketResponse> SeasonTickets,
     string? ParentsCommunication,

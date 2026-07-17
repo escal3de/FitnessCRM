@@ -15,6 +15,7 @@ public static class ContactDataMapper
             LastName = contactData.LastName,
             Patronymic = contactData.Patronymic,
             Birthday = contactData.Birthday,
+            UserGender = contactData.UserGender,
             Profession = contactData.Profession,
             LastUpdatedAt = contactData.LastUpdatedAt,
             CreatedAt = contactData.CreatedAt
@@ -28,6 +29,7 @@ public static class ContactDataMapper
             entity.LastName,
             entity.Patronymic,
             entity.Birthday,
+            entity.UserGender,
             entity.Profession,
             entity.LastUpdatedAt,
             entity.CreatedAt);

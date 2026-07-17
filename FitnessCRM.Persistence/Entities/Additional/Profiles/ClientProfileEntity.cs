@@ -13,7 +13,6 @@ public class ClientProfileEntity
     public int? Height { get; set; }
     public int? Weight { get; set; }
     public string? MedicalContraindications { get; set; }
-    public UserGender UserGender { get; set; }
     
     public List<ClientSchoolEntity> ClientSchools { get; set; }
     
