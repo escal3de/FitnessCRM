@@ -7,5 +7,6 @@ public record UpdateUserRequest(
     string? Name,
     string? LastName,
     string? Patronymic,
+    string? Gender,
     DateTime? Birthday,
     string? Profession);

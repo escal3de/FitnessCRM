@@ -1,9 +1,11 @@
 ﻿using CSharpFunctionalExtensions;
 using FitnessCRM.Application.Abstractions.Repositories;
 using FitnessCRM.Domain;
+using FitnessCRM.Domain.Enums.Users;
 using FitnessCRM.Domain.VO;
 using FitnessCRM.Persistence.Entities.VO;
 using FitnessCRM.Persistence.Mappers;
+using FitnessCRM.Persistence.Mappers.VO;
 using Microsoft.EntityFrameworkCore;
 
 namespace FitnessCRM.Persistence.Realisations.Repositories;
@@ -119,57 +121,36 @@ public class UsersRepository(AppDbContext dbContext) : IUsersRepository
             : Result.Failure<IEnumerable<User>>("Users list is empty");
     }
 
-    public async Task<Result> UpdateAsync(Guid id, Phone? phone, Email? email, string? avatarUrl,
-        string? name, string? lastName, string? patronymic, DateTime? birthday, string? profession,
-        CancellationToken cancellationToken)
+    public async Task<Result> UpdateAsync(User user, CancellationToken cancellationToken)
     {
-        var user = await _dbContext.Users
+        var entity = await _dbContext.Users
             .Include(x => x.ContactData)
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == user.Id, cancellationToken);
 
-        if (user is null)
-            return Result.Failure($"User with id {id} not found");
+        if (entity is null)
+            return Result.Failure($"User with id {user.Id} not found");
 
-        if (phone is not null)
-            user.Phone = phone;
+        entity.Phone = user.Phone;
+        entity.UpdatedAt = DateTime.UtcNow;
 
-        if (user.ContactData is null)
+        if (user.ContactData is not null)
         {
-            user.ContactData = new ContactDataEntity
+            if (entity.ContactData is null)
             {
-                UserId = id,
-                AvatarUrl = avatarUrl,
-                Email = email,
-                Name = name ?? string.Empty,
-                LastName = lastName ?? string.Empty,
-                Patronymic = patronymic ?? string.Empty,
-                Birthday = birthday,
-                Profession = profession,
-                LastUpdatedAt = DateTime.UtcNow,
-                CreatedAt = DateTime.UtcNow
-            };
+                entity.ContactData = user.ContactData.Map(user.Id);
+            }
+            else
+            {
+                entity.ContactData.AvatarUrl = user.ContactData.AvatarUrl;
+                entity.ContactData.Email = user.ContactData.Email;
+                entity.ContactData.Name = user.ContactData.Name;
+                entity.ContactData.LastName = user.ContactData.LastName;
+                entity.ContactData.Patronymic = user.ContactData.Patronymic;
+                entity.ContactData.Birthday = user.ContactData.Birthday;
+                entity.ContactData.Profession = user.ContactData.Profession;
+                entity.ContactData.LastUpdatedAt = DateTime.UtcNow;
+            }
         }
-        else
-        {
-            if (avatarUrl is not null)
-                user.ContactData.AvatarUrl = avatarUrl;
-            if (email is not null)
-                user.ContactData.Email = email;
-            if (name is not null)
-                user.ContactData.Name = name;
-            if (lastName is not null)
-                user.ContactData.LastName = lastName;
-            if (patronymic is not null)
-                user.ContactData.Patronymic = patronymic;
-            if (birthday is not null)
-                user.ContactData.Birthday = birthday;
-            if (profession is not null)
-                user.ContactData.Profession = profession;
-
-            user.ContactData.LastUpdatedAt = DateTime.UtcNow;
-        }
-
-        user.UpdatedAt = DateTime.UtcNow;
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 

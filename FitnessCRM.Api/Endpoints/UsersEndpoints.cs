@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using FitnessCRM.Api.Extensions;
+using FitnessCRM.Application.Contracts.Users;
 using FitnessCRM.Application.Handlers.Users;
 using Serilog;
 using static FitnessCRM.Domain.Permissions.Permissions;
@@ -52,13 +53,13 @@ public static class UsersEndpoints
                 return Results.BadRequest(userId.Error);
             }
 
-            var result = await handler.HandleAsync(id, userId.Value, cancellationToken);
+            var result = await handler.HandleAsync(id, cancellationToken, userId.Value);
             if (result.IsFailure)
             {
                 Log.Warning("Failed to get user: {Error}", result.Error);
                 return Results.BadRequest(result.Error);
             }
-            
+
             Log.Information("Finished to get user");
             return Results.Ok(result.Value);
         }).RequirePermission(UsersRead);
@@ -86,6 +87,59 @@ public static class UsersEndpoints
             Log.Information("Finished get users: {Success}", result.Value);
             return Results.Ok(result.Value);
         }).RequirePermission(UsersRead);
+
+        group.MapPatch("/", async (
+            ClaimsPrincipal claims,
+            UpdateUserRequest request,
+            UpdateUserHandler handler,
+            CancellationToken cancellationToken = default) =>
+        {
+            Log.Debug("Start to update user");
+
+            var userId = claims.TryGetUserGuid();
+            if (userId.IsFailure)
+            {
+                Log.Warning("Failed to update user: {Error}", userId.Error);
+                return Results.BadRequest(userId.Error);
+            }
+
+            var result = await handler.HandleAsync(userId.Value, request, cancellationToken);
+            if (result.IsFailure)
+            {
+                Log.Warning("Failed to update user: {Error}", result.Error);
+                return Results.BadRequest(result.Error);
+            }
+            
+            Log.Information("Finished to update user");
+            return Results.Ok(result);
+        }).RequirePermission(MeUpdate);
+        
+        group.MapPatch("/{id:guid}", async (
+            Guid id,
+            ClaimsPrincipal claims,
+            UpdateUserRequest request,
+            UpdateUserHandler handler,
+            CancellationToken cancellationToken = default) =>
+        {
+            Log.Debug("Start to update user");
+
+            var userId = claims.TryGetUserGuid();
+            if (userId.IsFailure)
+            {
+                Log.Warning("Failed to update user: {Error}", userId.Error);
+                return Results.BadRequest(userId.Error);
+            }
+
+            var result = await handler.HandleAsync(id, request, cancellationToken, userId.Value);
+            if (result.IsFailure)
+            {
+                Log.Warning("Failed to update user: {Error}", result.Error);
+                return Results.BadRequest(result.Error);
+            }
+            
+            Log.Information("Finished to update user");
+            return Results.Ok(result);
+        }).RequirePermission(UsersUpdate);
 
         group.MapDelete("/{id:guid}", async (
             Guid id,

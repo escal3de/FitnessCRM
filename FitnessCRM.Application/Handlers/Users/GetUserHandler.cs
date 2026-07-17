@@ -1,9 +1,7 @@
-﻿using System.Globalization;
-using CSharpFunctionalExtensions;
+﻿using CSharpFunctionalExtensions;
 using FitnessCRM.Application.Abstractions.Caching;
 using FitnessCRM.Application.Abstractions.Repositories;
 using FitnessCRM.Application.Mappers;
-using FitnessCRM.Domain;
 using FitnessCRM.Domain.Enums.Users;
 
 namespace FitnessCRM.Application.Handlers.Users;
@@ -15,8 +13,8 @@ public class GetUserHandler(
     private readonly IUsersRepository _repository = repository;
     private readonly ICacheService _cache = cache;
 
-    public async Task<Result<object>> HandleAsync(Guid id, Guid? checkerId = null,
-        CancellationToken cancellationToken = default)
+    public async Task<Result<object>> HandleAsync(Guid id,
+        CancellationToken cancellationToken, Guid? checkerId = null)
     {
         var cache = await _cache.GetAsync<object>($"cache:users:{id}", cancellationToken);
         if (cache != null)

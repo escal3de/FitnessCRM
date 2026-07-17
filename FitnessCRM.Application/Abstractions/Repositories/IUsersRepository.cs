@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using FitnessCRM.Domain;
+using FitnessCRM.Domain.Enums.Users;
 using FitnessCRM.Domain.VO;
 
 namespace FitnessCRM.Application.Abstractions.Repositories;
@@ -14,9 +15,7 @@ public interface IUsersRepository
     Task<Result<IEnumerable<User>>> GetAllClientsAsync(CancellationToken cancellationToken);
     Task<Result<IEnumerable<User>>> GetAllTeachersAsync(CancellationToken cancellationToken);
     Task<Result<IEnumerable<User>>> GetAllStaffAsync(CancellationToken cancellationToken);
-    Task<Result> UpdateAsync(Guid id, Phone? phone, Email? email, string? avatarUrl,
-        string? name, string? lastName, string? patronymic, DateTime? birthday, string? profession,
-        CancellationToken cancellationToken);
+    Task<Result> UpdateAsync(User user, CancellationToken cancellationToken);
 
     Task<Result> UpdateRefreshTokenAsync(Guid userId, string? refreshTokenHash, DateTime? refreshTokenExpiresAt,
         CancellationToken cancellationToken);
