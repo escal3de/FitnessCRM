@@ -2,7 +2,7 @@
 using FitnessCRM.Application.Abstractions.Repositories;
 using FitnessCRM.Application.Abstractions.Security;
 using FitnessCRM.Application.Abstractions.UnitOfWork;
-using FitnessCRM.Application.Contracts.Users;
+using FitnessCRM.Application.Contracts.Auth;
 using FitnessCRM.Domain;
 using FitnessCRM.Domain.VO;
 using FluentValidation;

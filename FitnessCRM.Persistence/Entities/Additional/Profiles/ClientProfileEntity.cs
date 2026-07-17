@@ -1,4 +1,4 @@
-﻿using FitnessCRM.Domain.Enums.User;
+﻿using FitnessCRM.Domain.Enums.Users;
 using FitnessCRM.Persistence.Entities.Additional.Other;
 
 namespace FitnessCRM.Persistence.Entities.Additional.Profiles;

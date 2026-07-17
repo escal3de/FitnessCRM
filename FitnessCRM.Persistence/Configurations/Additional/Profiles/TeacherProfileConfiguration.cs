@@ -36,5 +36,8 @@ public class TeacherProfileConfiguration : IEntityTypeConfiguration<TeacherProfi
             .WithMany(x => x.TeacherProfiles)
             .HasForeignKey(x => x.SchoolId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Property(x => x.CreatedAt)
+            .IsRequired();
     }
 }

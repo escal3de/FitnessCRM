@@ -18,4 +18,5 @@ public class TeacherProfileEntity
     
     public EducationEntity? Education { get; set; }
     public string? Achievements { get; set; }
+    public DateTime CreatedAt { get; set; }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using FitnessCRM.Domain.Enums.Users;
+using static FitnessCRM.Domain.Permissions.Permissions;
 
 namespace FitnessCRM.Domain.Permissions;
 
@@ -13,15 +14,23 @@ public static class MapPermissions
 
                 [UserRole.Default] =
                 [
-                    
+                    MeRead
+                ],
+
+                [UserRole.Teacher] =
+                [
+                    UsersRead
                 ],
 
                 [UserRole.Staff] =
                 [
+                    UsersUpdate,
+                    UsersDelete,
                 ],
 
                 [UserRole.Administrator] =
                 [
+                    AdminAccess
                 ]
             });
 

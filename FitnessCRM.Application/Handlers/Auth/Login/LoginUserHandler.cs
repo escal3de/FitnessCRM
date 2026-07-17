@@ -4,7 +4,7 @@ using CSharpFunctionalExtensions;
 using FitnessCRM.Application.Abstractions.Repositories;
 using FitnessCRM.Application.Abstractions.Security;
 using FitnessCRM.Application.Abstractions.UnitOfWork;
-using FitnessCRM.Application.Contracts.Users;
+using FitnessCRM.Application.Contracts.Auth;
 using FitnessCRM.Application.Mappers;
 using FitnessCRM.Domain.Enums.Users;
 using FitnessCRM.Domain.VO;

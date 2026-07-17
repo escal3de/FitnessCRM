@@ -1,4 +1,4 @@
-﻿namespace FitnessCRM.Application.Contracts.Users;
+﻿namespace FitnessCRM.Application.Contracts.Auth;
 
 public record LoginUserResponse(
     string Token,

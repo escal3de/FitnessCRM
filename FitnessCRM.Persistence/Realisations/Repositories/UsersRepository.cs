@@ -84,7 +84,7 @@ public class UsersRepository(AppDbContext dbContext) : IUsersRepository
 
         return result.Count != 0
             ? Result.Success(result.Select(x => x.Map()))
-            : Result.Failure<IEnumerable<User>>($"Users list is empty");
+            : Result.Failure<IEnumerable<User>>("Users list is empty");
     }
 
     public async Task<Result<IEnumerable<User>>> GetAllTeachersAsync(CancellationToken cancellationToken)
@@ -100,7 +100,22 @@ public class UsersRepository(AppDbContext dbContext) : IUsersRepository
 
         return result.Count != 0
             ? Result.Success(result.Select(x => x.Map()))
-            : Result.Failure<IEnumerable<User>>($"Users list is empty");
+            : Result.Failure<IEnumerable<User>>("Users list is empty");
+    }
+
+    public async Task<Result<IEnumerable<User>>> GetAllStaffAsync(CancellationToken cancellationToken)
+    {
+        var result = await _dbContext.Users
+            .AsNoTracking()
+            .Where(x => x.TeacherProfile != null)
+            .Include(x => x.ContactData)
+            .Include(x => x.StaffProfile)
+            .ThenInclude(x => x.Schools)
+            .ToListAsync(cancellationToken);
+
+        return result.Count != 0
+            ? Result.Success(result.Select(x => x.Map()))
+            : Result.Failure<IEnumerable<User>>("Users list is empty");
     }
 
     public async Task<Result> UpdateAsync(User user, CancellationToken cancellationToken)

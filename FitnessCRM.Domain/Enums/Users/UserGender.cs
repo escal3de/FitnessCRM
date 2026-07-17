@@ -1,4 +1,4 @@
-﻿namespace FitnessCRM.Domain.Enums.User;
+﻿namespace FitnessCRM.Domain.Enums.Users;
 
 public enum UserGender
 {

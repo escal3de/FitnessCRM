@@ -1,5 +1,5 @@
 ﻿using FitnessCRM.Api.Common;
-using FitnessCRM.Application.Contracts.Users;
+using FitnessCRM.Application.Contracts.Auth;
 using FitnessCRM.Application.Handlers.Auth.Login;
 using FitnessCRM.Application.Handlers.Auth.Refresh;
 using FitnessCRM.Application.Handlers.Auth.Register;

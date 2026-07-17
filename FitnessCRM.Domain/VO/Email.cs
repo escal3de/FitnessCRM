@@ -6,6 +6,8 @@ public sealed class Email
 {
     public string Value { get; }
     private Email(string value) => Value = value;
+    
+    public override string ToString() => Value;
 
     public static Result<Email> Create(string email)
     {

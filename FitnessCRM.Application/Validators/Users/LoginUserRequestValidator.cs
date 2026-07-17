@@ -1,4 +1,4 @@
-﻿using FitnessCRM.Application.Contracts.Users;
+﻿using FitnessCRM.Application.Contracts.Auth;
 using FluentValidation;
 
 namespace FitnessCRM.Application.Validators.Users;

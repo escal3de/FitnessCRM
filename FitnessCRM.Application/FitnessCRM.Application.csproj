@@ -18,8 +18,4 @@
       <ProjectReference Include="..\FitnessCRM.Domain\FitnessCRM.Domain.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Handlers\Users\" />
-    </ItemGroup>
-
 </Project>

@@ -1,5 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
-using FitnessCRM.Domain.Enums.User;
+using FitnessCRM.Domain.Enums.Users;
 
 namespace FitnessCRM.Domain.Additional.Profiles;
 
