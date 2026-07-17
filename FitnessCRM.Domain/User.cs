@@ -22,7 +22,7 @@ public class User
     public DateTime UpdateAt { get; private set; }
     public DateTime CreatedAt { get; private set; }
 
-    public User(Guid id, Phone phone, ContactData? contactData, ClientProfile? clientProfile,
+    private User(Guid id, Phone phone, ContactData? contactData, ClientProfile? clientProfile,
         TeacherProfile? teacherProfile, StaffProfile? staffProfile, UserRole role, string? refreshTokenHash,
         DateTime? refreshTokenExpiresAt, string hashedPassword, int tokenVersion, bool isTwoFactorEnabled,
         DateTime updateAt, DateTime createdAt)

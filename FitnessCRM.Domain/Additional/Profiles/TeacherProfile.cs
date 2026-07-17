@@ -14,7 +14,7 @@ public class TeacherProfile
     public string? Achievements { get; private set; }
     public DateTime CreatedAt { get; private set; }
 
-    public TeacherProfile(Guid id, PositionStatus positionStatus, List<Direction> directions, Education? education,
+    private TeacherProfile(Guid id, PositionStatus positionStatus, List<Direction> directions, Education? education,
         School? school, string? achievements, DateTime createdAt)
     {
         Id = id;
