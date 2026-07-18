@@ -36,10 +36,42 @@ public class SeasonTicketTemplate
     public static Result<SeasonTicketTemplate> Create(string name, decimal price, TicketType type,
         int validityPeriod, int workoutAmount, DateTime? startDate, DateTime endDate)
     {
+        var validation = Validate(name, price, validityPeriod, workoutAmount, startDate, endDate);
+        if (validation.IsFailure)
+            return Result.Failure<SeasonTicketTemplate>(validation.Error);
+
         var seasonTicket = new SeasonTicketTemplate(Guid.NewGuid(), name, price, Status.Active, type, validityPeriod,
             workoutAmount, startDate, endDate, DateTime.UtcNow);
 
         return Result.Success(seasonTicket);
+    }
+
+    private static Result Validate(string name, decimal price, int validityPeriod, int workoutAmount,
+        DateTime? startDate, DateTime endDate)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return Result.Failure("Template name is required");
+
+        if (name.Length > 200)
+            return Result.Failure("Template name must not exceed 200 characters");
+
+        if (price <= 0)
+            return Result.Failure("Price must be greater than 0");
+
+        if (validityPeriod <= 0)
+            return Result.Failure("Validity period must be greater than 0");
+
+        if (workoutAmount <= 0)
+            return Result.Failure("Workout amount must be greater than 0");
+
+        if (startDate is not null && startDate.Value < DateTime.UtcNow)
+            return Result.Failure("Start date cannot be in the past");
+
+        var effectiveStart = startDate ?? DateTime.MinValue;
+        if (endDate <= effectiveStart)
+            return Result.Failure("End date must be after start date");
+
+        return Result.Success();
     }
 
     public static SeasonTicketTemplate Load(Guid id, string name, decimal price, Status status, TicketType type,

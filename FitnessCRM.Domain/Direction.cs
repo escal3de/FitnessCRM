@@ -22,7 +22,28 @@ public class Direction
 
     public static Result<Direction> Create(string name, string description)
     {
+        var validation = Validate(name, description);
+        if (validation.IsFailure)
+            return Result.Failure<Direction>(validation.Error);
+
         return Result.Success(new Direction(Guid.NewGuid(), name, description, Status.Active, DateTime.UtcNow));
+    }
+
+    private static Result Validate(string name, string description)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return Result.Failure("Direction name is required");
+
+        if (name.Length > 200)
+            return Result.Failure("Direction name must not exceed 200 characters");
+
+        if (string.IsNullOrWhiteSpace(description))
+            return Result.Failure("Direction description is required");
+
+        if (description.Length > 2000)
+            return Result.Failure("Direction description must not exceed 2000 characters");
+
+        return Result.Success();
     }
 
     public static Direction Load(Guid id, string name, string description, Status status, DateTime createdAt)

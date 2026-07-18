@@ -34,8 +34,26 @@ public class School
 
     public static Result<School> Create(string? avatarUrl, string name, Email contactEmail)
     {
+        var validation = Validate(name, avatarUrl);
+        if (validation.IsFailure)
+            return Result.Failure<School>(validation.Error);
+
         return Result.Success(new School(Guid.NewGuid(), avatarUrl, name, contactEmail, Status.Active,
             [], [], [], DateTime.UtcNow));
+    }
+
+    private static Result Validate(string name, string? avatarUrl)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return Result.Failure("School name is required");
+
+        if (name.Length > 200)
+            return Result.Failure("School name must not exceed 200 characters");
+
+        if (avatarUrl is not null && avatarUrl.Length > 2048)
+            return Result.Failure("Avatar URL must not exceed 2048 characters");
+
+        return Result.Success();
     }
 
     public static School Load(Guid id, string? avatarUrl, string name, Email contactEmail, Status status,

@@ -17,6 +17,9 @@ public class UserConfiguration : IEntityTypeConfiguration<UserEntity>
             p.Property(x => x.Value);
             p.Property(x => x.LanguageCode);
         });
+        
+        builder.HasIndex(x => x.Phone)
+            .IsUnique();
 
         builder.HasOne(x => x.ContactData)
             .WithOne(x => x.User)

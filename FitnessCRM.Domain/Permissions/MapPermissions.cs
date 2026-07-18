@@ -15,18 +15,21 @@ public static class MapPermissions
                 [UserRole.Default] =
                 [
                     MeRead,
-                    MeUpdate
+                    MeUpdate,
+                    MeReadSeasonTickets
                 ],
 
                 [UserRole.Teacher] =
                 [
-                    UsersRead
+                    UsersRead,
+                    UserReadSeasonTickets
                 ],
 
                 [UserRole.Staff] =
                 [
                     UsersUpdate,
                     UsersDelete,
+                    UserReadAllSeasonTickets
                 ],
 
                 [UserRole.Administrator] =

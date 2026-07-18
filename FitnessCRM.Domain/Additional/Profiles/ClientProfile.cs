@@ -29,8 +29,23 @@ public class ClientProfile
 
     public static Result<ClientProfile> Create(int? height, int? weight)
     {
+        var validation = Validate(height, weight);
+        if (validation.IsFailure)
+            return Result.Failure<ClientProfile>(validation.Error);
+
         return Result.Success(new ClientProfile(Guid.NewGuid(), height, weight,
             null, [], [], null, DateTime.UtcNow));
+    }
+
+    private static Result Validate(int? height, int? weight)
+    {
+        if (height is not null && (height < 50 || height > 300))
+            return Result.Failure("Height must be between 50 and 300 cm");
+
+        if (weight is not null && (weight < 20 || weight > 500))
+            return Result.Failure("Weight must be between 20 and 500 kg");
+
+        return Result.Success();
     }
 
     public static ClientProfile Load(Guid id, int? height, int? weight, string? medicalContraindications,

@@ -1,5 +1,8 @@
-﻿using FitnessCRM.Application.Abstractions.Repositories;
+﻿using FitnessCRM.Application.Abstractions.Caching;
+using FitnessCRM.Application.Abstractions.Repositories;
+using FitnessCRM.Application.Abstractions.UnitOfWork;
 using FitnessCRM.Persistence.Realisations.Repositories;
+using FitnessCRM.Persistence.Realisations.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +17,8 @@ public static class Injection
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
         services.AddScoped<IUsersRepository, UsersRepository>();
+        services.AddScoped<ISeasonTicketRepository, SeasonTicketRepository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
     }

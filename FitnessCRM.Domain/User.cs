@@ -45,9 +45,36 @@ public class User
 
     public static Result<User> Create(Phone phone, string password)
     {
+        var validation = Validate(password);
+        if (validation.IsFailure)
+            return Result.Failure<User>(validation.Error);
+
         return Result.Success(new User(Guid.NewGuid(), phone, null, null, null, null, UserRole.Default,
             null, null, password, 0, false,
             DateTime.UtcNow, DateTime.UtcNow));
+    }
+
+    private static Result Validate(string password)
+    {
+        if (string.IsNullOrWhiteSpace(password))
+            return Result.Failure("Password is required");
+
+        if (password.Length < 6)
+            return Result.Failure("Password must be at least 6 characters");
+
+        if (password.Length > 128)
+            return Result.Failure("Password must not exceed 128 characters");
+
+        if (!password.Any(char.IsUpper))
+            return Result.Failure("Password must contain at least one uppercase letter");
+
+        if (!password.Any(char.IsLower))
+            return Result.Failure("Password must contain at least one lowercase letter");
+
+        if (!password.Any(char.IsDigit))
+            return Result.Failure("Password must contain at least one digit");
+
+        return Result.Success();
     }
 
     public static User Load(Guid id, Phone phone, ContactData? contactData, ClientProfile? clientProfile,

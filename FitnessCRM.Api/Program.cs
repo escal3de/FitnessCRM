@@ -44,5 +44,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapAuthEndpoints();
+app.MapUsersEndpoints();
+app.MapSeasonTicketsEndpoints();
 
 app.Run();

@@ -29,8 +29,23 @@ public class TeacherProfile
     public static Result<TeacherProfile> Create(PositionStatus positionStatus, List<Direction> directions,
         Education? education, School? school, string? achievements)
     {
+        var validation = Validate(directions, achievements);
+        if (validation.IsFailure)
+            return Result.Failure<TeacherProfile>(validation.Error);
+
         return Result.Success(new TeacherProfile(Guid.NewGuid(), positionStatus, directions, education, school,
             achievements, DateTime.UtcNow));
+    }
+
+    private static Result Validate(List<Direction> directions, string? achievements)
+    {
+        if (directions is null || directions.Count == 0)
+            return Result.Failure("At least one direction is required");
+
+        if (achievements is not null && achievements.Length > 5000)
+            return Result.Failure("Achievements must not exceed 5000 characters");
+
+        return Result.Success();
     }
 
     public static TeacherProfile Load(Guid id, PositionStatus positionStatus, List<Direction> directions,
