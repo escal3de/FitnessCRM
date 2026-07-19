@@ -32,9 +32,6 @@ public class SeasonTicketConfiguration : IEntityTypeConfiguration<SeasonTicketEn
 
         builder.Property(x => x.SchoolName)
             .IsRequired();
-        
-        builder.Property(x => x.QrCodeLink)
-            .IsRequired();
 
         builder.Property(x => x.CreatedAt)
             .IsRequired();

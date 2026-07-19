@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using FitnessCRM.Api.Extensions;
+using FitnessCRM.Application.Contracts.SeasonTickets;
 using FitnessCRM.Application.Handlers.SeasonTickets;
 using Serilog;
 using static FitnessCRM.Domain.Permissions.Permissions;
@@ -12,10 +13,23 @@ public static class SeasonTicketsEndpoints
     {
         var group = endpoints.MapGroup("/api/season-tickets");
 
-        group.MapPost("/", async () =>
+        group.MapPost("/", async (
+            CreateSeasonTicketRequest request,
+            CreateSeasonTicketHandler handler,
+            CancellationToken cancellationToken = default) =>
         {
+            Log.Debug("Start to create season ticket");
+
+            var result = await handler.HandleAsync(request, cancellationToken);
+            if (result.IsFailure)
+            {
+                Log.Warning("Failed to create season ticket: {Error}", result.Error);
+                return Results.BadRequest(result.Error);
+            }
             
-        });
+            Log.Information("Finished season ticket");
+            return Results.Ok(result.Value);
+        }).RequirePermission(SeasonTicketsCreate);
 
         group.MapGet("/all", async (
             GetAllSeasonTicketsHandler handler,
@@ -32,7 +46,7 @@ public static class SeasonTicketsEndpoints
             
             Log.Information("Finished get all season tickets");
             return Results.Ok(result);
-        }).RequirePermission(UserReadAllSeasonTickets);
+        }).RequirePermission(SeasonTicketsReadAll);
 
         group.MapGet("/for-trainer/{id:guid}", async (
             Guid id,
@@ -50,7 +64,7 @@ public static class SeasonTicketsEndpoints
             
             Log.Information("Finished get season ticket");
             return Results.Ok(result.Value);
-        }).RequirePermission(UserReadSeasonTickets);
+        }).RequirePermission(SeasonTicketsRead);
 
         group.MapGet("/by-client/{clientId:guid}", async (
             Guid clientId,
@@ -68,7 +82,7 @@ public static class SeasonTicketsEndpoints
             
             Log.Information("Finished get client season tickets");
             return Results.Ok(result.Value);
-        }).RequirePermission(UserReadSeasonTickets);
+        }).RequirePermission(SeasonTicketsRead);
 
         group.MapGet("/", async (
             ClaimsPrincipal claims,
@@ -94,6 +108,24 @@ public static class SeasonTicketsEndpoints
             Log.Information("Finished get season tickets");
             return Results.Ok(result.Value);
         }).RequirePermission(MeReadSeasonTickets);
+
+        group.MapDelete("/{id:guid}", async (
+            Guid id,
+            DeleteSeasonTicketHandler handler,
+            CancellationToken cancellationToken = default) =>
+        {
+            Log.Debug("Start to delete season ticket: {Id}", id);
+            
+            var result = await handler.HandleAsync(id, cancellationToken);
+            if (result.IsFailure)
+            {
+                Log.Warning("Failed to delete season ticket: {Error}", result.Error);
+                return Results.BadRequest(result.Error);
+            }
+            
+            Log.Information("Finished delete season ticket");
+            return Results.Ok();
+        });
         
         return group;
     }

@@ -1,11 +1,10 @@
 ﻿namespace FitnessCRM.Application.Contracts.SeasonTickets;
 
 public record CreateSeasonTicketRequest(
-    Guid ClientId,
+    Guid UserId,
     string Name,
     DateTime ActiveAt,
     DateTime ExpiresAt,
     int RemainingWorkouts,
     decimal Price,
-    string SchoolName,
-    string QrCodeLink);
+    string SchoolName);

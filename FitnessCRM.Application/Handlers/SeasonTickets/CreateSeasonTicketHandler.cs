@@ -2,6 +2,8 @@
 using FitnessCRM.Application.Abstractions.Repositories;
 using FitnessCRM.Application.Abstractions.UnitOfWork;
 using FitnessCRM.Application.Contracts.SeasonTickets;
+using FitnessCRM.Application.Mappers;
+using FitnessCRM.Domain;
 using FluentValidation;
 
 namespace FitnessCRM.Application.Handlers.SeasonTickets;
@@ -17,38 +19,37 @@ public class CreateSeasonTicketHandler(
     private readonly IValidator<CreateSeasonTicketRequest> _validator = validator;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-    public async Task<Result> HandleAsync(CreateSeasonTicketRequest request, CancellationToken cancellationToken)
+    public async Task<Result<SeasonTicketResponse>> HandleAsync(CreateSeasonTicketRequest request,
+        CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
         if (!validationResult.IsValid)
-            return Result.Failure(string.Join("; ", validationResult.Errors.Select(x => x.ErrorMessage)));
+            return Result.Failure<SeasonTicketResponse>(
+                string.Join("; ", validationResult.Errors.Select(x => x.ErrorMessage)));
 
-        var userResult = await _usersRepository.GetByIdAsync(request.ClientId, cancellationToken);
-        if (userResult.IsFailure)
-            return Result.Failure(userResult.Error);
+        var user = await _usersRepository.GetByIdAsync(request.UserId, cancellationToken);
+        if (user.IsFailure)
+            return Result.Failure<SeasonTicketResponse>(user.Error);
 
-        var clientProfile = userResult.Value.ClientProfile;
-        if (clientProfile is null)
-            return Result.Failure("User does not have a client profile");
+        if (user.Value.ClientProfile is null)
+            return Result.Failure<SeasonTicketResponse>("Client profile is empty");
 
-        var ticketResult = Domain.SeasonTicket.Create(
+        var seasonTicket = SeasonTicket.Create(
             request.Name,
             request.ActiveAt,
             request.ExpiresAt,
             request.RemainingWorkouts,
             request.Price,
-            request.SchoolName,
-            request.QrCodeLink);
+            request.SchoolName);
+        if (seasonTicket.IsFailure)
+            return Result.Failure<SeasonTicketResponse>(seasonTicket.Error);
 
-        if (ticketResult.IsFailure)
-            return Result.Failure(ticketResult.Error);
-
-        var addResult = await _seasonTicketRepository.AddAsync(ticketResult.Value, clientProfile.Id, cancellationToken);
-        if (addResult.IsFailure)
-            return Result.Failure(addResult.Error);
+        var result = await _seasonTicketRepository.AddAsync(seasonTicket.Value, user.Value.ClientProfile.Id, cancellationToken);
+        if (result.IsFailure)
+            return Result.Failure<SeasonTicketResponse>(result.Error);
 
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Result.Success();
+        return Result.Success(seasonTicket.Value.Map());
     }
 }

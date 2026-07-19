@@ -11,11 +11,10 @@ public class SeasonTicket
     public int RemainingWorkouts { get; private set; }
     public decimal Price { get; private set; }
     public string SchoolName { get; private set; }
-    public string QrCodeLink { get; private set; }
     public DateTime CreatedAt { get; private set; }
 
     private SeasonTicket(Guid id, string name, DateTime activeAt, DateTime expiresAt, int remainingWorkouts,
-        decimal price, string schoolName, string qrCodeLink, DateTime createdAt)
+        decimal price, string schoolName, DateTime createdAt)
     {
         Id = id;
         Name = name;
@@ -24,19 +23,18 @@ public class SeasonTicket
         RemainingWorkouts = remainingWorkouts;
         Price = price;
         SchoolName = schoolName;
-        QrCodeLink = qrCodeLink;
         CreatedAt = createdAt;
     }
 
     public static Result<SeasonTicket> Create(string name, DateTime activeAt, DateTime expiresAt, int remainingWorkouts,
-        decimal price, string schoolName, string qrCodeLink)
+        decimal price, string schoolName)
     {
         var validation = Validate(name, activeAt, expiresAt, remainingWorkouts, price, schoolName);
         if (validation.IsFailure)
             return Result.Failure<SeasonTicket>(validation.Error);
 
         return Result.Success(new SeasonTicket(Guid.NewGuid(), name, activeAt, expiresAt, remainingWorkouts, price,
-            schoolName, qrCodeLink, DateTime.UtcNow));
+            schoolName, DateTime.UtcNow));
     }
 
     private static Result Validate(string name, DateTime activeAt, DateTime expiresAt, int remainingWorkouts,
@@ -67,6 +65,6 @@ public class SeasonTicket
     }
 
     public static SeasonTicket Load(Guid id, string name, DateTime activeAt, DateTime expiresAt, int remainingWorkouts,
-        decimal price, string schoolName, string qrCodeLink, DateTime createdAt)
-        => new SeasonTicket(id, name, activeAt, expiresAt, remainingWorkouts, price, schoolName, qrCodeLink, createdAt);
+        decimal price, string schoolName, DateTime createdAt)
+        => new SeasonTicket(id, name, activeAt, expiresAt, remainingWorkouts, price, schoolName, createdAt);
 }

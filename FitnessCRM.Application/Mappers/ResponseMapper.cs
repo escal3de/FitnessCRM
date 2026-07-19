@@ -107,7 +107,6 @@ public static class ResponseMapper
             seasonTicket.RemainingWorkouts,
             seasonTicket.Price,
             seasonTicket.SchoolName,
-            seasonTicket.QrCodeLink,
             seasonTicket.CreatedAt);
 
     public static SeasonTicketTemplateResponse Map(this SeasonTicketTemplate seasonTicketTemplate)

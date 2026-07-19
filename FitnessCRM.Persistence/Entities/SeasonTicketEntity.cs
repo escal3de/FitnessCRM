@@ -15,6 +15,5 @@ public class SeasonTicketEntity
     public int RemainingWorkouts { get; set; }
     public decimal Price { get; set; }
     public string SchoolName { get; set; }
-    public string QrCodeLink { get; set; }
     public DateTime CreatedAt { get; set; }
 }

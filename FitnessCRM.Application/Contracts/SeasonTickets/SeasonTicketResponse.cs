@@ -8,5 +8,4 @@ public record SeasonTicketResponse(
     int RemainingWorkouts,
     decimal Price,
     string SchoolName,
-    string QrCodeLink,
     DateTime CreatedAt);

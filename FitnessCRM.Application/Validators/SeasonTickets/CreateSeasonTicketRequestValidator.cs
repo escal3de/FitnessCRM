@@ -7,8 +7,8 @@ public class CreateSeasonTicketRequestValidator : AbstractValidator<CreateSeason
 {
     public CreateSeasonTicketRequestValidator()
     {
-        RuleFor(x => x.ClientId)
-            .NotEmpty().WithMessage("Идентификатор клиента обязателен");
+        RuleFor(x => x.UserId)
+            .NotEmpty().WithMessage("Идентификатор пользователя обязателен");
 
         RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Название обязательно")

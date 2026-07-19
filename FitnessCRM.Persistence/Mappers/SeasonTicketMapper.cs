@@ -16,7 +16,6 @@ public static class SeasonTicketMapper
             RemainingWorkouts = seasonTicket.RemainingWorkouts,
             Price = seasonTicket.Price,
             SchoolName = seasonTicket.SchoolName,
-            QrCodeLink = seasonTicket.QrCodeLink,
             CreatedAt = seasonTicket.CreatedAt
         };
 
@@ -29,6 +28,5 @@ public static class SeasonTicketMapper
             seasonTicketEntity.RemainingWorkouts,
             seasonTicketEntity.Price,
             seasonTicketEntity.SchoolName,
-            seasonTicketEntity.QrCodeLink,
             seasonTicketEntity.CreatedAt);
 }
