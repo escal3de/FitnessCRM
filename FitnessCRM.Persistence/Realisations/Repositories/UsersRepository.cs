@@ -21,15 +21,20 @@ public class UsersRepository(AppDbContext dbContext) : IUsersRepository
         return Result.Success();
     }
 
-    public async Task<Result<User>> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<Result<User>> GetByIdAsync(Guid id, Guid? schoolId, CancellationToken cancellationToken)
     {
-        var result = await _dbContext.Users
+        var query = _dbContext.Users
             .AsNoTracking()
             .Include(x => x.ContactData)
             .Include(x => x.ClientProfile)
             .Include(x => x.TeacherProfile)
             .Include(x => x.StaffProfile)
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            .AsQueryable();
+
+        if (schoolId.HasValue)
+            query = query.Where(x => x.SchoolId == schoolId.Value);
+
+        var result = await query.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
         return result is not null
             ? Result.Success(result.Map())
@@ -58,31 +63,29 @@ public class UsersRepository(AppDbContext dbContext) : IUsersRepository
             : Result.Failure<User>($"User with refresh token {refreshTokenHash} not found");
     }
 
-    public async Task<Result<IEnumerable<User>>> GetAllAsync(CancellationToken cancellationToken)
+    public async Task<Result<School>> GetSchoolByIdAsync(Guid schoolId, CancellationToken cancellationToken)
     {
-        var result = await _dbContext.Users
+        var result = await _dbContext.Schools
             .AsNoTracking()
-            .Include(x => x.ContactData)
-            .Include(x => x.ClientProfile)
-            .Include(x => x.TeacherProfile)
-            .Include(x => x.StaffProfile)
-            .ToListAsync(cancellationToken);
+            .Include(x => x.Cabinets)
+            .Include(x => x.Directions)
+            .Include(x => x.SeasonTicketTemplates)
+            .FirstOrDefaultAsync(x => x.Id == schoolId, cancellationToken);
 
-        return result.Count != 0
-            ? Result.Success(result.Select(x => x.Map()))
-            : Result.Failure<IEnumerable<User>>($"Users list is empty");
+        return result is not null
+            ? Result.Success(result.Map())
+            : Result.Failure<School>($"School with id {schoolId} not found");
     }
 
-    public async Task<Result<IEnumerable<User>>> GetAllClientsAsync(CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<User>>> GetAllClientsBySchoolAsync(Guid schoolId, CancellationToken cancellationToken)
     {
         var result = await _dbContext.Users
             .AsNoTracking()
+            .Where(x => x.SchoolId == schoolId)
             .Where(x => x.ClientProfile != null)
             .Include(x => x.ContactData)
             .Include(x => x.ClientProfile)
             .ThenInclude(x => x.SeasonTickets)
-            .Include(x => x.ClientProfile)
-            .ThenInclude(x => x.ClientSchools)
             .ToListAsync(cancellationToken);
 
         return result.Count != 0
@@ -90,15 +93,15 @@ public class UsersRepository(AppDbContext dbContext) : IUsersRepository
             : Result.Failure<IEnumerable<User>>("Users list is empty");
     }
 
-    public async Task<Result<IEnumerable<User>>> GetAllTeachersAsync(CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<User>>> GetAllTeachersBySchoolAsync(Guid schoolId, CancellationToken cancellationToken)
     {
         var result = await _dbContext.Users
             .AsNoTracking()
+            .Where(x => x.SchoolId == schoolId)
             .Where(x => x.TeacherProfile != null)
             .Include(x => x.ContactData)
             .Include(x => x.TeacherProfile)
             .ThenInclude(x => x.Directions.Select(x => x.Name))
-            .Include(x => x.TeacherProfile).ThenInclude(x => x.School)
             .ToListAsync(cancellationToken);
 
         return result.Count != 0
@@ -106,14 +109,14 @@ public class UsersRepository(AppDbContext dbContext) : IUsersRepository
             : Result.Failure<IEnumerable<User>>("Users list is empty");
     }
 
-    public async Task<Result<IEnumerable<User>>> GetAllStaffAsync(CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<User>>> GetAllStaffBySchoolAsync(Guid schoolId, CancellationToken cancellationToken)
     {
         var result = await _dbContext.Users
             .AsNoTracking()
-            .Where(x => x.TeacherProfile != null)
+            .Where(x => x.SchoolId == schoolId)
+            .Where(x => x.StaffProfile != null)
             .Include(x => x.ContactData)
             .Include(x => x.StaffProfile)
-            .ThenInclude(x => x.Schools)
             .ToListAsync(cancellationToken);
 
         return result.Count != 0

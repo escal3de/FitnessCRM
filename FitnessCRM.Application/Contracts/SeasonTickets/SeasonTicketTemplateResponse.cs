@@ -8,6 +8,6 @@ public record SeasonTicketTemplateResponse(
     string Type,
     int ValidityPeriod,
     int WorkoutAmount,
-    DateTime StartData,
+    DateTime StartDate,
     DateTime EndDate,
     DateTime CreatedAt);

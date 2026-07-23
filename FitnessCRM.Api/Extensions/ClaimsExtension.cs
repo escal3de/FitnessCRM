@@ -25,4 +25,23 @@ public static class ClaimsExtension
         
         return Result.Success(result);
     }
+    
+    public static Result<Guid> TryGetUserSchool(this ClaimsPrincipal user)
+    {
+        var guid = user.Claims.FirstOrDefault(x => x.Type == "schoolId")?.Value;
+
+        if (guid is null)
+        {
+            Log.Warning("School id not found in claims");
+            return Result.Failure<Guid>("School id not found in claims");
+        }
+
+        if (!Guid.TryParse(guid, out var result))
+        {
+            Log.Warning("School id not parsed");
+            return Result.Failure<Guid>("School id not parsed");
+        }
+        
+        return Result.Success(result);
+    }
 }

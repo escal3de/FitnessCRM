@@ -13,6 +13,24 @@ public static class UsersEndpoints
     {
         var group = endpoints.MapGroup("/api/users");
 
+        group.MapPost("/", async (
+            CreateUserRequest request,
+            CreateUserHandler handler,
+            CancellationToken cancellationToken = default) =>
+        {
+            Log.Debug("Start to create user");
+            
+            var result = await handler.HandleAsync(request, cancellationToken);
+            if (result.IsFailure)
+            {
+                Log.Warning("Failed to create user: {Error}", result.Error);
+                return Results.BadRequest(result.Error);
+            }
+            
+            Log.Information("Finished to create user");
+            return Results.Ok(result);
+        }).RequirePermission(UsersCreate);
+
         group.MapGet("/me", async (
             ClaimsPrincipal claims,
             GetUserHandler handler,
@@ -27,7 +45,7 @@ public static class UsersEndpoints
 
             Log.Debug("Start get me");
 
-            var result = await handler.HandleAsync(id: userId.Value, cancellationToken: cancellationToken);
+            var result = await handler.HandleAsync(userId.Value, cancellationToken);
             if (result.IsFailure)
             {
                 Log.Warning("Failed to get user: {Error}", result.Error);
@@ -40,20 +58,12 @@ public static class UsersEndpoints
 
         group.MapGet("/{id:guid}", async (
             Guid id,
-            ClaimsPrincipal claims,
             GetUserHandler handler,
             CancellationToken cancellationToken = default) =>
         {
             Log.Debug("Start to get user: {Id}", id);
 
-            var userId = claims.TryGetUserGuid();
-            if (userId.IsFailure)
-            {
-                Log.Warning("Failed to get user: {Error}", userId.Error);
-                return Results.BadRequest(userId.Error);
-            }
-
-            var result = await handler.HandleAsync(id, cancellationToken, userId.Value);
+            var result = await handler.HandleAsync(id, cancellationToken);
             if (result.IsFailure)
             {
                 Log.Warning("Failed to get user: {Error}", result.Error);
@@ -116,21 +126,13 @@ public static class UsersEndpoints
         
         group.MapPatch("/{id:guid}", async (
             Guid id,
-            ClaimsPrincipal claims,
             UpdateUserRequest request,
             UpdateUserHandler handler,
             CancellationToken cancellationToken = default) =>
         {
             Log.Debug("Start to update user");
 
-            var userId = claims.TryGetUserGuid();
-            if (userId.IsFailure)
-            {
-                Log.Warning("Failed to update user: {Error}", userId.Error);
-                return Results.BadRequest(userId.Error);
-            }
-
-            var result = await handler.HandleAsync(id, request, cancellationToken, userId.Value);
+            var result = await handler.HandleAsync(id, request, cancellationToken);
             if (result.IsFailure)
             {
                 Log.Warning("Failed to update user: {Error}", result.Error);
@@ -143,21 +145,13 @@ public static class UsersEndpoints
 
         group.MapDelete("/{id:guid}", async (
             Guid id,
-            ClaimsPrincipal claims,
             DeleteUserHandler handler,
             CancellationToken cancellationToken = default
         ) =>
         {
             Log.Debug("Start to delete user: {Id}", id);
 
-            var userId = claims.TryGetUserGuid();
-            if (userId.IsFailure)
-            {
-                Log.Warning("Failed to get user: {Error}", userId.Error);
-                return Results.BadRequest(userId.Error);
-            }
-
-            var result = await handler.HandleAsync(id, userId.Value, cancellationToken);
+            var result = await handler.HandleAsync(id, cancellationToken);
             if (result.IsFailure)
             {
                 Log.Warning("Failed to delete user: {Error}", result.Error);

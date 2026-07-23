@@ -14,7 +14,6 @@ public static class TeacherProfileMapper
             PositionStatus = profile.PositionStatus,
             Directions = profile.Directions.Select(x => x.Map()).ToList(),
             Education = profile.Education?.Map(profile.Id),
-            School = profile.School?.Map(),
             Achievements = profile.Achievements,
             CreatedAt = profile.CreatedAt,
         };
@@ -25,7 +24,6 @@ public static class TeacherProfileMapper
             entity.PositionStatus,
             entity.Directions.Select(x => x.Map()).ToList() ?? [],
             entity.Education?.Map(),
-            entity.School.Map(),
             entity.Achievements,
             entity.CreatedAt);
 }

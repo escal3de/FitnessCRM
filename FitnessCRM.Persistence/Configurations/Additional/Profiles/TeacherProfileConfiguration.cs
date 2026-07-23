@@ -31,11 +31,6 @@ public class TeacherProfileConfiguration : IEntityTypeConfiguration<TeacherProfi
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.Property(x => x.Achievements);
-        
-        builder.HasOne(x => x.School)
-            .WithMany(x => x.TeacherProfiles)
-            .HasForeignKey(x => x.SchoolId)
-            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Property(x => x.CreatedAt)
             .IsRequired();

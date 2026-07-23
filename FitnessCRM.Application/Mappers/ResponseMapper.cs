@@ -26,9 +26,10 @@ public static class ResponseMapper
             user.Id,
             user.Phone.ToString(),
             user.ContactData?.Map(),
+            user.School?.Map(),
             user.Role.ToString(),
             user.IsTwoFactorEnabled,
-            user.UpdateAt,
+            user.UpdatedAt,
             user.CreatedAt);
 
     public static ContactDataResponse Map(this ContactData contactData)
@@ -50,7 +51,6 @@ public static class ResponseMapper
             clientProfile.Height,
             clientProfile.Weight,
             clientProfile.MedicalContraindications,
-            clientProfile.Schools.Select(x => x.Name.ToString()).ToList(),
             clientProfile.SeasonTickets.Select(x => x.Map()).ToList(),
             clientProfile.ParentsCommunication,
             clientProfile.CreatedAt);
@@ -61,7 +61,6 @@ public static class ResponseMapper
             clientProfile.Height,
             clientProfile.Weight,
             clientProfile.MedicalContraindications,
-            clientProfile.Schools.Select(x => x.Name.ToString()).ToList(),
             clientProfile.SeasonTickets.Select(x => x.Map()).ToList(),
             clientProfile.ParentsCommunication,
             clientProfile.CreatedAt);
@@ -72,7 +71,6 @@ public static class ResponseMapper
             teacherProfile.PositionStatus.ToString(),
             teacherProfile.Directions.Select(x => x.Map()).ToList(),
             teacherProfile.Education?.Map(),
-            teacherProfile.School?.Map(),
             teacherProfile.Achievements,
             teacherProfile.CreatedAt);
     
@@ -82,20 +80,17 @@ public static class ResponseMapper
             teacherProfile.PositionStatus.ToString(),
             teacherProfile.Directions.Select(x => x.Map()).ToList(),
             teacherProfile.Education?.Map(),
-            teacherProfile.School?.Map(),
             teacherProfile.Achievements,
             teacherProfile.CreatedAt);
 
     public static StaffProfileResponse ToStaffResponse(this UserResponse userResponse, StaffProfile staffProfile)
         => new StaffProfileResponse(
             staffProfile.Id,
-            staffProfile.Schools?.Select(x => x.Map()).ToList(),
             staffProfile.CreatedAt);
     
     public static StaffProfileResponse Map(this StaffProfile staffProfile)
         => new StaffProfileResponse(
             staffProfile.Id,
-            staffProfile.Schools?.Select(x => x.Map()).ToList(),
             staffProfile.CreatedAt);
 
     public static SeasonTicketResponse Map(this SeasonTicket seasonTicket)

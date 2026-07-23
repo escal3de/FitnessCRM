@@ -27,6 +27,7 @@ public static class MapPermissions
 
                 [UserRole.Staff] =
                 [
+                    UsersCreate,
                     UsersUpdate,
                     UsersDelete,
                     

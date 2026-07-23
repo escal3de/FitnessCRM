@@ -16,13 +16,14 @@ public static class UserMapper
             ClientProfile = user.ClientProfile?.Map(user.Id),
             TeacherProfile = user.TeacherProfile?.Map(user.Id),
             StaffProfile = user.StaffProfile?.Map(user.Id),
+            SchoolId = user.School?.Id,
             Role = user.Role,
             RefreshTokenHash = user.RefreshTokenHash,
             RefreshTokenExpiresAt = user.RefreshTokenExpiresAt,
             HashedPassword = user.HashedPassword,
             TokenVersion = user.TokenVersion,
             IsTwoFactorEnabled = user.IsTwoFactorEnabled,
-            UpdatedAt = user.UpdateAt,
+            UpdatedAt = user.UpdatedAt,
             CreatedAt = user.CreatedAt
         };
 
@@ -34,6 +35,7 @@ public static class UserMapper
             entity.ClientProfile?.Map(),
             entity.TeacherProfile?.Map(),
             entity.StaffProfile?.Map(),
+            entity.School?.Map(),
             entity.Role,
             entity.RefreshTokenHash,
             entity.RefreshTokenExpiresAt,

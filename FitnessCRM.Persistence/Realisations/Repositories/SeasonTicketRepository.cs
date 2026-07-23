@@ -41,6 +41,19 @@ public class SeasonTicketRepository(AppDbContext dbContext) : ISeasonTicketRepos
             : Result.Failure<IEnumerable<SeasonTicket>>($"Season tickets for client profile id {clientProfileId} not found");
     }
 
+    public async Task<Result<IEnumerable<SeasonTicket>>> GetAllBySchoolIdAsync(Guid schoolId,
+        CancellationToken cancellationToken)
+    {
+        var result = await _dbContext.SeasonTickets
+            .AsNoTracking()
+            .Where(x => x.ClientProfile.User.SchoolId == schoolId)
+            .ToListAsync(cancellationToken);
+
+        return result.Count != 0
+            ? Result.Success(result.Select(x => x.Map()))
+            : Result.Failure<IEnumerable<SeasonTicket>>($"Season tickets for school {schoolId} not found");
+    }
+
     public async Task<Result<IEnumerable<SeasonTicket>>> GetAllAsync(CancellationToken cancellationToken)
     {
         var result = await _dbContext.SeasonTickets

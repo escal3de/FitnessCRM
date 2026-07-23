@@ -21,11 +21,6 @@ public class ClientProfileConfiguration : IEntityTypeConfiguration<ClientProfile
 
         builder.Property(x => x.MedicalContraindications);
         
-        builder.HasMany(x => x.ClientSchools)
-            .WithOne(x => x.ClientProfile)
-            .HasForeignKey(x => x.ClientProfileId)
-            .OnDelete(DeleteBehavior.Cascade);
-        
         builder.HasMany(x => x.SeasonTickets)
             .WithOne(x => x.ClientProfile)
             .HasForeignKey(x => x.ClientProfileId)

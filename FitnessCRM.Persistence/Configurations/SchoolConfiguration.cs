@@ -11,8 +11,8 @@ public class SchoolConfiguration : IEntityTypeConfiguration<SchoolEntity>
     {
         builder.HasKey(x => x.Id);
         
-        builder.HasOne(x => x.StaffProfile)
-            .WithMany(x => x.Schools)
+        builder.HasOne(x => x.Staff)
+            .WithMany()
             .HasForeignKey(x => x.StaffId)
             .OnDelete(DeleteBehavior.Cascade);
 

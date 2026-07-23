@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using FitnessCRM.Application.Abstractions.Caching;
+using FitnessCRM.Application.Abstractions.Isolating;
 using FitnessCRM.Application.Abstractions.Repositories;
 using FitnessCRM.Application.Contracts.Users;
 using FitnessCRM.Domain;
@@ -12,33 +13,31 @@ namespace FitnessCRM.Application.Handlers.Users;
 public class UpdateUserHandler(
     IUsersRepository repository,
     IValidator<UpdateUserRequest> validator,
-    ICacheService cache)
+    ICacheService cache,
+    ICurrentUserService current)
 {
     private readonly IUsersRepository _repository = repository;
     private readonly IValidator<UpdateUserRequest> _validator = validator;
     private readonly ICacheService _cache = cache;
+    private readonly ICurrentUserService _current = current;
 
     public async Task<Result> HandleAsync(Guid id, UpdateUserRequest request,
-        CancellationToken cancellationToken, Guid? updaterId = null)
+        CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(request, cancellationToken);
         if (!validationResult.IsValid)
             return Result.Failure(
                 string.Join("; ",  validationResult.Errors.Select(x => x.ErrorMessage)));
         
-        var userResult = await _repository.GetByIdAsync(id, cancellationToken);
+        var userResult = await _repository.GetByIdAsync(id, _current.SchoolId, cancellationToken);
         if (userResult.IsFailure)
             return Result.Failure(userResult.Error);
 
-        if (updaterId.HasValue)
-        {
-            var updaterResult = await _repository.GetByIdAsync(updaterId.Value, cancellationToken);
-            if (updaterResult.IsFailure)
-                return Result.Failure(updaterResult.Error);
+        if (_current.SchoolId is not null && userResult.Value.School?.Id != _current.SchoolId)
+            return Result.Failure("User does not belong to your school");
 
-            if ((int)userResult.Value.Role > (int)updaterResult.Value.Role)
-                return Result.Failure("You cannot update this user: their role is higher than yours");
-        }
+        if ((int)userResult.Value.Role > (int)_current.UserRole)
+            return Result.Failure("You cannot update this user: their role is higher than yours");
 
         var user = userResult.Value;
 
@@ -103,6 +102,7 @@ public class UpdateUserHandler(
             user.ClientProfile,
             user.TeacherProfile,
             user.StaffProfile,
+            user.School,
             user.Role,
             user.RefreshTokenHash,
             user.RefreshTokenExpiresAt,
@@ -116,7 +116,7 @@ public class UpdateUserHandler(
         if (updateResult.IsFailure)
             return updateResult;
 
-        await _cache.RemoveAsync($"cache:users:{id}", cancellationToken);
+        await _cache.RemoveAsync($"cache:users:{_current.SchoolId}:{id}", cancellationToken);
 
         return Result.Success();
     }

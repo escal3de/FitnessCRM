@@ -30,6 +30,9 @@ public class JwtProvider(IOptions<JwtOptions> options) : IJwtProvider
             new("tv", user.TokenVersion.ToString()),
                 ..permissions.Select(p => new Claim("permission", p))
         ];
+
+        if (user.School is not null)
+            claims.Add(new Claim("schoolId", user.School.Id.ToString()));
         
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

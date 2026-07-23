@@ -10,13 +10,11 @@ public static class StaffProfileMapper
         {
             Id = profile.Id,
             UserId = userId,
-            Schools = profile.Schools?.Select(x => x.Map()).ToList() ?? [],
             CreatedAt = profile.CreatedAt
         };
 
     public static StaffProfile Map(this StaffProfileEntity entity)
         => StaffProfile.Load(
             entity.Id,
-            entity.Schools?.Select(x => x.Map()).ToList(),
             entity.CreatedAt);
 }

@@ -10,11 +10,8 @@ public class TeacherProfileEntity
     public Guid UserId { get; set; }
     public UserEntity User { get; set; }
 
-    public PositionStatus PositionStatus { get; set; }
-    public List<DirectionEntity> Directions { get; set; }
-    
-    public Guid SchoolId { get; set; }
-    public SchoolEntity School { get; set; }
+    public PositionStatus? PositionStatus { get; set; }
+    public List<DirectionEntity>? Directions { get; set; }
     
     public EducationEntity? Education { get; set; }
     public string? Achievements { get; set; }

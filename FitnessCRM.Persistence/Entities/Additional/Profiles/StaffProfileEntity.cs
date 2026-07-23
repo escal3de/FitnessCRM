@@ -7,6 +7,5 @@ public class StaffProfileEntity
     public Guid UserId { get; set; }
     public UserEntity User { get; set; }
 
-    public List<SchoolEntity>? Schools { get; set; }
     public DateTime CreatedAt { get; set; }
 }

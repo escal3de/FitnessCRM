@@ -19,7 +19,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<ClientProfileEntity> ClientProfiles { get; set; }
     public DbSet<StaffProfileEntity> StaffProfiles { get; set; }
     public DbSet<TeacherProfileEntity> TeacherProfiles { get; set; }
-    public DbSet<ClientSchoolEntity> ClientSchools { get; set; }
     public DbSet<CabinetEntity> Cabinets { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

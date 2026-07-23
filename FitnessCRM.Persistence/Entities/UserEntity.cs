@@ -13,6 +13,8 @@ public class UserEntity
     public ClientProfileEntity? ClientProfile { get; set; }
     public TeacherProfileEntity? TeacherProfile { get; set; }
     public StaffProfileEntity? StaffProfile { get; set; }
+    public Guid? SchoolId { get; set; }
+    public SchoolEntity? School { get; set; }
     public UserRole Role { get; set; }
     public string? RefreshTokenHash { get; set; }
     public DateTime? RefreshTokenExpiresAt { get; set; }

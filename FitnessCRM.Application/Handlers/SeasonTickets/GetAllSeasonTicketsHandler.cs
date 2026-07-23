@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using FitnessCRM.Application.Abstractions.Caching;
+using FitnessCRM.Application.Abstractions.Isolating;
 using FitnessCRM.Application.Abstractions.Repositories;
 using FitnessCRM.Application.Contracts.SeasonTickets;
 using FitnessCRM.Application.Mappers;
@@ -9,11 +10,13 @@ namespace FitnessCRM.Application.Handlers.SeasonTickets;
 public class GetAllSeasonTicketsHandler(
     ISeasonTicketRepository seasonTicketRepository,
     IUsersRepository usersRepository,
-    ICacheService cache)
+    ICacheService cache,
+    ICurrentUserService current)
 {
     private readonly ISeasonTicketRepository _seasonTicketRepository = seasonTicketRepository;
     private readonly IUsersRepository _usersRepository = usersRepository;
     private readonly ICacheService _cache = cache;
+    private readonly ICurrentUserService _current = current;
 
     public async Task<Result<IEnumerable<SeasonTicketResponse>>> HandleAsync(CancellationToken cancellationToken,
         Guid? clientId = null, Guid? userId = null)
@@ -24,7 +27,7 @@ public class GetAllSeasonTicketsHandler(
 
         if (clientId.HasValue)
         {
-            var cacheKey = $"cache:season-tickets:client:{clientId.Value}";
+            var cacheKey = $"cache:season-tickets:{_current.SchoolId}:{clientId.Value}";
 
             var cached = await _cache.GetAsync<IEnumerable<SeasonTicketResponse>>(cacheKey, cancellationToken);
             if (cached is not null)
@@ -42,13 +45,13 @@ public class GetAllSeasonTicketsHandler(
 
         if (userId.HasValue)
         {
-            var userCacheKey = $"cache:season-tickets:user:{userId.Value}";
+            var userCacheKey = $"cache:season-tickets:{_current.SchoolId}:user:{userId.Value}";
             
             var cached = await _cache.GetAsync<IEnumerable<SeasonTicketResponse>>(userCacheKey, cancellationToken);
             if (cached is not null)
                 return Result.Success(cached);
             
-            var user = await _usersRepository.GetByIdAsync(userId.Value, cancellationToken);
+            var user = await _usersRepository.GetByIdAsync(userId.Value, _current.SchoolId, cancellationToken);
             if (user.IsFailure)
                 return Result.Failure<IEnumerable<SeasonTicketResponse>>(user.Error);
 
@@ -66,13 +69,16 @@ public class GetAllSeasonTicketsHandler(
             return Result.Success(response.AsEnumerable());
         }
 
-        var allCacheKey = "cache:season-tickets:all";
+        if (_current.SchoolId is null)
+            return Result.Failure<IEnumerable<SeasonTicketResponse>>("School id is required");
+
+        var allCacheKey = $"cache:season-tickets:{_current.SchoolId.Value}:all";
 
         var allCached = await _cache.GetAsync<IEnumerable<SeasonTicketResponse>>(allCacheKey, cancellationToken);
         if (allCached is not null)
             return Result.Success(allCached);
 
-        var allResult = await _seasonTicketRepository.GetAllAsync(cancellationToken);
+        var allResult = await _seasonTicketRepository.GetAllBySchoolIdAsync(_current.SchoolId.Value, cancellationToken);
         if (allResult.IsFailure)
             return Result.Failure<IEnumerable<SeasonTicketResponse>>(allResult.Error);
 

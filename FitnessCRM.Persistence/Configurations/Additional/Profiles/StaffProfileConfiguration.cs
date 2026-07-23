@@ -14,11 +14,6 @@ public class StaffProfileConfiguration : IEntityTypeConfiguration<StaffProfileEn
             .WithOne(x => x.StaffProfile)
             .HasForeignKey<StaffProfileEntity>(x => x.UserId)
             .OnDelete(DeleteBehavior.Cascade);
-        
-        builder.HasMany(x => x.Schools)
-            .WithOne(x => x.StaffProfile)
-            .HasForeignKey(x => x.StaffId)
-            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Property(x => x.CreatedAt)
             .IsRequired();

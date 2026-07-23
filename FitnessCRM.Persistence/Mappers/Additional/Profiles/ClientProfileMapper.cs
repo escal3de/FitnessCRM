@@ -24,7 +24,6 @@ public static class ClientProfileMapper
             entity.Height,
             entity.Weight,
             entity.MedicalContraindications,
-            entity.ClientSchools?.Select(x => x.School?.Map()).Where(x => x != null).ToList() ?? [],
             entity.SeasonTickets?.Select(x => x.Map()).ToList() ?? [],
             entity.ParentsCommunication,
             entity.CreatedAt);

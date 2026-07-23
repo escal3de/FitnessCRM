@@ -40,6 +40,11 @@ public class UserConfiguration : IEntityTypeConfiguration<UserEntity>
             .WithOne(x => x.User)
             .HasForeignKey<StaffProfileEntity>(x => x.UserId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasOne(x => x.School)
+            .WithMany()
+            .HasForeignKey(x => x.SchoolId)
+            .OnDelete(DeleteBehavior.SetNull);
         
         builder.Property(x => x.Role)
             .HasConversion<string>()
