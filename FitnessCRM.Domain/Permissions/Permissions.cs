@@ -17,5 +17,10 @@ public static class Permissions
     public const string SeasonTicketsDelete = "season_tickets.delete";
     public const string SeasonTicketsReadAll = "season_tickets.read.all";
 
+    public const string SeasonTicketTemplatesCreate = "season_ticket_templates.create";
+    public const string SeasonTicketTemplatesRead = "season_ticket_templates.read";
+    public const string SeasonTicketTemplatesUpdate = "season_ticket_templates.update";
+    public const string SeasonTicketTemplatesDelete = "season_ticket_templates.delete";
+
     public const string AdminAccess = "admin.access";
 }

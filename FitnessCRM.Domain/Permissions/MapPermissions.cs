@@ -34,7 +34,12 @@ public static class MapPermissions
                     SeasonTicketsCreate,
                     SeasonTicketsUpdate,
                     SeasonTicketsDelete,
-                    SeasonTicketsReadAll
+                    SeasonTicketsReadAll,
+                    
+                    SeasonTicketTemplatesCreate,
+                    SeasonTicketTemplatesRead,
+                    SeasonTicketTemplatesUpdate,
+                    SeasonTicketTemplatesDelete
                 ],
 
                 [UserRole.Administrator] =
