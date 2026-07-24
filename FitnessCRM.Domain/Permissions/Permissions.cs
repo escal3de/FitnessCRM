@@ -22,5 +22,10 @@ public static class Permissions
     public const string SeasonTicketTemplatesUpdate = "season_ticket_templates.update";
     public const string SeasonTicketTemplatesDelete = "season_ticket_templates.delete";
 
+    public const string DirectionsCreate = "directions.create";
+    public const string DirectionsRead = "directions.read";
+    public const string DirectionsUpdate = "directions.update";
+    public const string DirectionsDelete = "directions.delete";
+
     public const string AdminAccess = "admin.access";
 }

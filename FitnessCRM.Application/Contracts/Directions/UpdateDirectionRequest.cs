@@ -2,4 +2,5 @@ namespace FitnessCRM.Application.Contracts.Directions;
 
 public record UpdateDirectionRequest(
     string? Name,
-    string? Description);
+    string? Description,
+    List<Guid>? TeacherProfileIds);

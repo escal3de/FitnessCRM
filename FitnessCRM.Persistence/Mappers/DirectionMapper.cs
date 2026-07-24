@@ -1,5 +1,6 @@
 ﻿using FitnessCRM.Domain;
 using FitnessCRM.Persistence.Entities;
+using FitnessCRM.Persistence.Mappers.Additional.Profiles;
 
 namespace FitnessCRM.Persistence.Mappers;
 
@@ -22,5 +23,6 @@ public static class DirectionMapper
             entity.Name,
             entity.Description,
             entity.Status,
+            entity.TeacherProfiles?.Select(x => x.Map()).ToList() ?? [],
             entity.CreatedAt);
 }

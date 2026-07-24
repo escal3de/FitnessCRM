@@ -142,6 +142,7 @@ public static class ResponseMapper
             direction.Name,
             direction.Description,
             direction.Status.ToString(),
+            direction.TeacherProfiles.Select(x => x.Map()).ToList(),
             direction.CreatedAt);
 
     public static CabinetResponse Map(this Cabinet cabinet)

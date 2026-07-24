@@ -21,9 +21,7 @@ public class TeacherProfileConfiguration : IEntityTypeConfiguration<TeacherProfi
             .IsRequired();
         
         builder.HasMany(x => x.Directions)
-            .WithOne(x => x.TeacherProfile)
-            .HasForeignKey(x => x.TeacherProfileId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .WithMany(x => x.TeacherProfiles);
 
         builder.HasOne(x => x.Education)
             .WithOne(x => x.TeacherProfile)

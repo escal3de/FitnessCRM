@@ -22,7 +22,8 @@ public static class MapPermissions
                 [UserRole.Teacher] =
                 [
                     UsersRead,
-                    SeasonTicketsRead
+                    SeasonTicketsRead,
+                    DirectionsRead
                 ],
 
                 [UserRole.Staff] =
@@ -39,7 +40,11 @@ public static class MapPermissions
                     SeasonTicketTemplatesCreate,
                     SeasonTicketTemplatesRead,
                     SeasonTicketTemplatesUpdate,
-                    SeasonTicketTemplatesDelete
+                    SeasonTicketTemplatesDelete,
+
+                    DirectionsCreate,
+                    DirectionsUpdate,
+                    DirectionsDelete
                 ],
 
                 [UserRole.Administrator] =

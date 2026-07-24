@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using FitnessCRM.Domain.Additional.Profiles;
 using FitnessCRM.Domain.Enums;
 
 namespace FitnessCRM.Domain;
@@ -9,14 +10,17 @@ public class Direction
     public string Name { get; private set; }
     public string Description { get; private set; }
     public Status Status { get; private set; }
+    public List<TeacherProfile> TeacherProfiles { get; private set; }
     public DateTime CreatedAt { get; private set; }
 
-    private Direction(Guid id, string name, string description, Status status, DateTime createdAt)
+    private Direction(Guid id, string name, string description, Status status, List<TeacherProfile> teacherProfiles,
+        DateTime createdAt)
     {
         Id = id;
         Name = name;
         Description = description;
         Status = status;
+        TeacherProfiles = teacherProfiles;
         CreatedAt = createdAt;
     }
 
@@ -26,7 +30,7 @@ public class Direction
         if (validation.IsFailure)
             return Result.Failure<Direction>(validation.Error);
 
-        return Result.Success(new Direction(Guid.NewGuid(), name, description, Status.Active, DateTime.UtcNow));
+        return Result.Success(new Direction(Guid.NewGuid(), name, description, Status.Active, [], DateTime.UtcNow));
     }
 
     private static Result Validate(string name, string description)
@@ -46,6 +50,7 @@ public class Direction
         return Result.Success();
     }
 
-    public static Direction Load(Guid id, string name, string description, Status status, DateTime createdAt)
-        => new Direction(id, name, description, status, createdAt);
+    public static Direction Load(Guid id, string name, string description, Status status,
+        List<TeacherProfile> teacherProfiles, DateTime createdAt)
+        => new Direction(id, name, description, status, teacherProfiles, createdAt);
 }
